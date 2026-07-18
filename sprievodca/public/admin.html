@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Sprievodca</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .page { width: 100%; max-width: 640px; padding: 40px 20px 60px; }
+  .box { background: rgba(255,255,255,.03); border: 1px solid var(--rule); padding: 28px; margin-bottom: 24px; }
+  .box h2 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.3rem; margin-bottom: 16px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: 6px; }
+  .field input[type=text] { width: 100%; }
+  .field input[type=file] { width: 100%; color: var(--paper); }
+
+  .doc-list { list-style: none; }
+  .doc-list li { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(184,146,58,.12); }
+  .doc-list li:last-child { border-bottom: none; }
+  .doc-title { font-size: 1.05rem; }
+  .doc-meta { font-size: .8rem; color: var(--muted); }
+  .del-btn { background: none; border: 1px solid var(--rule); color: var(--muted); padding: 6px 12px; font-size: .8rem; cursor: pointer; }
+  .del-btn:hover { color: var(--gold); border-color: var(--gold); }
+
+  .status { font-size: .9rem; margin-top: 10px; color: var(--muted); font-style: italic; }
+  .status.error { color: #d4756a; }
+  .status.success { color: var(--gold-lt); }
+
+  #loginBox { text-align: center; margin-top: 80px; }
+  #loginBox input { width: 100%; max-width: 280px; margin: 16px auto; display: block; text-align: center; }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <div id="loginBox">
+    <h1>Admin <span class="gold">prihlásenie</span></h1>
+    <input type="password" id="passwordInput" placeholder="Heslo">
+    <button id="loginBtn" class="cta-btn" style="margin: 0 auto;">Vstúpiť</button>
+    <p id="loginStatus" class="status error"></p>
+  </div>
+
+  <div id="adminPanel" style="display:none;">
+    <div class="ornament">
+      <svg viewBox="0 0 24 24"><path d="M12 2L9.5 9H2l6 4.5L5.5 21 12 16.5 18.5 21 16 13.5l6-4.5h-7.5z"/></svg>
+    </div>
+
+    <div class="box">
+      <h2>Nahrať novú knihu / dokument</h2>
+      <div class="field">
+        <label>Názov (voliteľné, inak sa použije názov súboru)</label>
+        <input type="text" id="titleInput" placeholder="napr. (Ne)potrebný muž">
+      </div>
+      <div class="field">
+        <label>Súbor (.txt, .md, .pdf, .docx)</label>
+        <input type="file" id="fileInput" accept=".txt,.md,.pdf,.docx">
+      </div>
+      <button id="uploadBtn" class="cta-btn">Nahrať a spracovať</button>
+      <p id="uploadStatus" class="status"></p>
+    </div>
+
+    <div class="box">
+      <h2>Nahrané dokumenty</h2>
+      <ul class="doc-list" id="docList"></ul>
+    </div>
+  </div>
+</main>
+
+<script src="/js/admin.js"></script>
+</body>
+</html>
