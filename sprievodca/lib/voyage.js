@@ -1,10 +1,8 @@
 // Voyage AI embeddings — https://docs.voyageai.com/
 const VOYAGE_URL = 'https://api.voyageai.com/v1/embeddings';
+const BATCH_LIMIT = 1000; // Voyage API limit — max kúskov textu na jeden request
 
-async function embed(texts, inputType = 'document') {
-  const isArray = Array.isArray(texts);
-  const input = isArray ? texts : [texts];
-
+async function embedBatch(input, inputType) {
   const res = await fetch(VOYAGE_URL, {
     method: 'POST',
     headers: {
@@ -24,7 +22,21 @@ async function embed(texts, inputType = 'document') {
   }
 
   const data = await res.json();
-  const vectors = data.data.map((d) => d.embedding);
+  return data.data.map((d) => d.embedding);
+}
+
+async function embed(texts, inputType = 'document') {
+  const isArray = Array.isArray(texts);
+  const input = isArray ? texts : [texts];
+
+  // Veľké knihy môžu vytvoriť viac ako 1000 úryvkov — pošleme ich po dávkach, aby sme
+  // neprekročili limit Voyage API na počet kúskov v jednom requeste.
+  let vectors = [];
+  for (let i = 0; i < input.length; i += BATCH_LIMIT) {
+    const batch = input.slice(i, i + BATCH_LIMIT);
+    vectors = vectors.concat(await embedBatch(batch, inputType));
+  }
+
   return isArray ? vectors : vectors[0];
 }
 
