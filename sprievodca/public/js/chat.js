@@ -44,10 +44,16 @@ async function sendMessage() {
     });
     const data = await res.json();
 
+    if (res.status === 402) {
+      pending.remove();
+      if (typeof showPaywall === 'function') showPaywall(data);
+      return;
+    }
     if (!res.ok) throw new Error(data.error || 'Neznáma chyba');
 
     pending.textContent = data.answer;
     pending.classList.remove('pending');
+    if (typeof loadAccount === 'function') loadAccount();
   } catch (err) {
     pending.textContent = 'Prepáč, nastala chyba. Skús to prosím znova.';
     pending.classList.remove('pending');

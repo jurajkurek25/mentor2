@@ -32,14 +32,33 @@
   .input-row button { white-space: nowrap; }
 
   footer { text-align: center; font-size: .75rem; color: var(--muted); opacity: .6; margin-top: 20px; }
+
+  .account-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: .82rem; color: var(--muted); padding: 10px 0; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+  .account-bar a, .account-bar button.link-btn { color: var(--gold); text-decoration: none; background: none; border: none; font-family: inherit; font-size: inherit; cursor: pointer; padding: 0; }
+  .account-bar a:hover, .account-bar button.link-btn:hover { color: var(--gold-lt); }
+
+  .paywall { display: none; background: rgba(184,146,58,.08); border: 1px solid var(--rule); padding: 20px; margin: 16px 0; text-align: center; }
+  .paywall p { margin-bottom: 14px; line-height: 1.6; }
+  .plans { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+  .plan-card { flex: 1; min-width: 150px; border: 1px solid var(--rule); padding: 16px; }
+  .plan-card h3 { font-family: 'Cormorant Garamond', serif; font-weight: 400; color: var(--gold-lt); margin-bottom: 6px; }
+  .plan-card .price { font-size: 1.3rem; margin-bottom: 4px; }
+  .plan-card .tokens { font-size: .78rem; color: var(--muted); margin-bottom: 12px; }
 </style>
 </head>
 <body>
 <main class="page">
+  <div class="account-bar" id="accountBar"></div>
+
   <div class="hero">
     <span class="eyebrow">(Ne)potrebný muž</span>
     <h1>Spýtaj sa <span class="gold">Sprievodcu</span></h1>
     <p class="hero-sub">Odpovede postavené na knihách o mužstve</p>
+  </div>
+
+  <div class="paywall" id="paywall">
+    <p id="paywallMessage"></p>
+    <div class="plans" id="plans"></div>
   </div>
 
   <div class="ornament">
@@ -58,6 +77,7 @@
   <footer>© 2026 Juraj Augustín Kurek · Ngroup s.r.o.</footer>
 </main>
 
+<script src="/js/account.js"></script>
 <script src="/js/chat.js"></script>
 </body>
 </html>

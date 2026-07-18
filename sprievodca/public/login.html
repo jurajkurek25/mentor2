@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prihlásenie — Sprievodca</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .page { width: 100%; max-width: 420px; padding: 60px 20px; }
+  .box { background: rgba(255,255,255,.03); border: 1px solid var(--rule); padding: 28px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: 6px; }
+  .field input { width: 100%; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .tab-btn { flex: 1; background: none; border: 1px solid var(--rule); color: var(--muted); padding: 10px; cursor: pointer; font-family: 'Cormorant Garamond', serif; letter-spacing: .08em; text-transform: uppercase; font-size: .8rem; }
+  .tab-btn.active { color: var(--gold); border-color: var(--gold); }
+  .status { font-size: .9rem; margin-top: 10px; color: var(--muted); font-style: italic; min-height: 1.2em; }
+  .status.error { color: #d4756a; }
+  .divider { display: flex; align-items: center; gap: 10px; margin: 18px 0; color: var(--muted); font-size: .8rem; }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+  .google-btn { display: block; width: 100%; text-align: center; padding: 13px; background: none; border: 1px solid var(--rule); color: var(--paper); text-decoration: none; font-family: 'EB Garamond', serif; }
+  .google-btn:hover { border-color: var(--gold); }
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="ornament">
+    <svg viewBox="0 0 24 24"><path d="M12 2L9.5 9H2l6 4.5L5.5 21 12 16.5 18.5 21 16 13.5l6-4.5h-7.5z"/></svg>
+  </div>
+  <h1 style="margin-bottom: 24px;">Tvoj <span class="gold">účet</span></h1>
+
+  <div class="box">
+    <div class="tabs">
+      <button class="tab-btn active" id="tabLogin">Prihlásiť sa</button>
+      <button class="tab-btn" id="tabRegister">Registrovať sa</button>
+    </div>
+
+    <form id="authForm">
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" id="email" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Heslo</label>
+        <input type="password" id="password" required autocomplete="current-password" minlength="8">
+      </div>
+      <button type="submit" class="cta-btn" id="submitBtn" style="width:100%;">Prihlásiť sa</button>
+      <p class="status" id="formStatus"></p>
+    </form>
+
+    <div class="divider">alebo</div>
+    <a class="google-btn" href="/api/auth/google">Pokračovať cez Google</a>
+  </div>
+</main>
+
+<script src="/js/auth.js"></script>
+</body>
+</html>
