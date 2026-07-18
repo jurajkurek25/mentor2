@@ -23,6 +23,11 @@
   .msg.user { align-self: flex-end; background: rgba(184,146,58,.12); border: 1px solid var(--rule); color: var(--paper); }
   .msg.assistant { align-self: flex-start; background: rgba(255,255,255,.03); border-left: 2px solid var(--gold); color: #d0c4ae; }
   .msg.assistant strong { color: var(--paper); }
+  .msg.assistant p { margin: 0 0 10px; }
+  .msg.assistant p:last-child { margin-bottom: 0; }
+  .msg.assistant ul, .msg.assistant ol { margin: 0 0 10px 1.3em; }
+  .msg.assistant ul:last-child, .msg.assistant ol:last-child { margin-bottom: 0; }
+  .msg.assistant li { margin-bottom: 4px; }
   .msg.pending { color: var(--muted); font-style: italic; }
 
   .empty-state { text-align: center; color: var(--muted); font-style: italic; font-size: 1.05rem; margin: 40px 0; line-height: 1.8; }
