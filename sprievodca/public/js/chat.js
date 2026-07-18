@@ -27,6 +27,16 @@ function addMessage(role, text) {
   return div;
 }
 
+// Claude odpovedá s markdown zvýrazneniami (**tučné**) — escapneme HTML (nech sa nič nedá
+// vsunúť cez injekciu) a **text** premeníme na skutočné <strong>, nech sa nezobrazujú hviezdičky.
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function formatAssistantText(text) {
+  return escapeHtml(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
 async function sendMessage() {
   const text = messageInput.value.trim();
   if (!text) return;
@@ -51,7 +61,7 @@ async function sendMessage() {
     }
     if (!res.ok) throw new Error(data.error || 'Neznáma chyba');
 
-    pending.textContent = data.answer;
+    pending.innerHTML = formatAssistantText(data.answer);
     pending.classList.remove('pending');
     if (typeof loadAccount === 'function') loadAccount();
   } catch (err) {
