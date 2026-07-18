@@ -11,6 +11,9 @@ const { attachUser } = require('./middleware/requireAuth');
 
 const app = express();
 
+// Za Nginx reverse proxy (CloudPanel) — bez tohto by req.protocol/secure cookies fungovali nesprávne.
+app.set('trust proxy', 1);
+
 // Stripe webhook potrebuje presné (nepreparsované) telo requestu na overenie podpisu —
 // preto ho registrujeme PRED express.json() a rovno tu s vlastným raw-body handlerom.
 app.post('/api/billing/webhook', express.raw({ type: 'application/json' }), (req, res) => {

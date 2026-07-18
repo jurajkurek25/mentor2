@@ -107,19 +107,8 @@ tabuľky vyššie alebo ceny/kvóty uprav.
 
 ## 7. Deployment na Hetzner (CloudPanel + PM2 + Nginx)
 
-Presne ako tvoje ostatné Node.js appky:
-
-1. V CloudPanel vytvor novú **Node.js site** pre `sprievodca.nepotrebnymuz.sk`
-2. Nahraj tento priečinok na server (git clone alebo scp), spusti `npm install --production`
-3. Vytvor `.env` na serveri s produkčnými kľúčmi (nikdy needituj cez git)
-4. Spusti cez PM2:
-   ```bash
-   pm2 start server.js --name sprievodca
-   pm2 save
-   ```
-5. Nastav Nginx reverse proxy na `sprievodca.nepotrebnymuz.sk` → `localhost:PORT` (podľa portu v `.env`)
-   — CloudPanel to väčšinou spraví za teba pri vytváraní Node.js site
-6. Over SSL (Let's Encrypt cez CloudPanel)
+Podrobný krok-za-krokom postup (vrátane Supabase/Google/Stripe nastavenia pre produkciu, checklistu
+`.env` premenných a otestovania po nasadení) je v samostatnom súbore **[`DEPLOY.md`](./DEPLOY.md)**.
 
 ## Poznámky k nákladom
 
