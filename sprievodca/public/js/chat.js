@@ -34,14 +34,17 @@ function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-// Tučné zvýraznenie funguje aj naprieč riadkami v rámci toho istého odseku (viacriadkové **...**).
+// Tučné (**text**) aj kurzíva (*text*) — najprv dvojitá hviezdička (tučné), až potom jednoduchá
+// (kurzíva), nech sa **tučné** neomylom rozseká jednohviezdičkovým pravidlom.
 function inlineFormat(str) {
-  return str.replace(/\*\*([\s\S]+?)\*\*/g, '<strong>$1</strong>');
+  let out = str.replace(/\*\*([\s\S]+?)\*\*/g, '<strong>$1</strong>');
+  out = out.replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<em>$1</em>');
+  return out;
 }
 
 const BULLET_RE = /^[-*]\s+(.*)/;
 const NUMBERED_RE = /^\d+[.)]\s+(.*)/;
-const HEADING_RE = /^#{1,6}\s+(.*)/;
+const HEADING_RE = /^(#{1,6})\s+(.*)/;
 
 // Prechádza text riadok po riadku (nie po odsekoch) — vďaka tomu rozpozná zoznam aj vtedy, keď
 // mu AI nepredradí prázdny riadok (bežné: "Skús toto:\n- bod 1\n- bod 2").
@@ -91,7 +94,9 @@ function formatAssistantText(raw) {
     const heading = line.match(HEADING_RE);
     if (heading) {
       flushParagraph();
-      parts.push(`<p><strong>${inlineFormat(heading[1])}</strong></p>`);
+      // # = najväčší nadpis, ## o niečo menší, ### a viac # sa už zobrazujú rovnako malé.
+      const level = Math.min(heading[1].length, 3);
+      parts.push(`<p class="msg-heading msg-heading-${level}">${inlineFormat(heading[2])}</p>`);
       continue;
     }
 
