@@ -30,7 +30,7 @@ async function askMentor({ userMessage, contextChunks, history = [] }) {
       'anthropic-version': '2023-06-01'
     },
     body: JSON.stringify({
-      model: process.env.CLAUDE_MODEL || 'claude-sonnet-5',
+      model: process.env.CLAUDE_MODEL || 'claude-haiku-4-5-20251001',
       max_tokens: 1024,
       system: MENTOR_SYSTEM_PROMPT,
       messages
@@ -44,7 +44,10 @@ async function askMentor({ userMessage, contextChunks, history = [] }) {
 
   const data = await res.json();
   const textBlock = data.content.find((b) => b.type === 'text');
-  return textBlock ? textBlock.text : '';
+  return {
+    answer: textBlock ? textBlock.text : '',
+    outputTokens: data.usage?.output_tokens || 0
+  };
 }
 
 module.exports = { askMentor };

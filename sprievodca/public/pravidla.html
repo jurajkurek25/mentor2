@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Právne informácie — Sprievodca</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #14121e;
+    --paper: #f6eedd;
+    --gold: #b8923a;
+    --gold-lt: #d4aa55;
+    --muted: #7a6a52;
+    --rule: rgba(184, 146, 58, 0.35);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--ink);
+    background-image: radial-gradient(ellipse 120% 80% at 50% -10%, #2a2240 0%, transparent 60%);
+    font-family: 'EB Garamond', Georgia, serif;
+    color: var(--paper);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .page { width: 100%; max-width: 760px; padding: 40px 20px 80px; }
+
+  .ornament { display: flex; align-items: center; gap: 14px; margin: 0 0 24px; opacity: .6; }
+  .ornament::before, .ornament::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .ornament svg { flex-shrink: 0; fill: var(--gold); width: 18px; height: 18px; }
+
+  .eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: .72rem;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    text-align: center;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(1.9rem, 7vw, 2.6rem);
+    line-height: 1.05;
+    color: var(--paper);
+    text-align: center;
+    margin: 10px 0 6px;
+  }
+  h1 .gold { color: var(--gold-lt); font-style: normal; }
+
+  .updated { text-align: center; font-size: .8rem; color: var(--muted); margin-bottom: 32px; }
+
+  .tabs { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+  .tab-btn {
+    flex: 1;
+    min-width: 140px;
+    background: none;
+    border: 1px solid var(--rule);
+    color: var(--muted);
+    padding: 12px 10px;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    font-size: .8rem;
+    transition: color .2s, border-color .2s;
+  }
+  .tab-btn.active { color: var(--gold-lt); border-color: var(--gold); }
+  .tab-btn:hover { color: var(--gold-lt); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .panel h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    color: var(--gold-lt);
+    margin: 28px 0 10px;
+  }
+  .panel h2:first-child { margin-top: 0; }
+
+  .panel p, .panel li { line-height: 1.75; font-size: 1rem; color: #d0c4ae; margin-bottom: 12px; }
+  .panel ul, .panel ol { margin: 0 0 14px 1.4em; }
+  .panel li { margin-bottom: 6px; }
+  .panel strong { color: var(--paper); }
+
+  .callout {
+    background: rgba(184,146,58,.08);
+    border-left: 2px solid var(--gold);
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: .95rem;
+  }
+  .callout strong { color: var(--gold-lt); }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: .92rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { color: var(--gold-lt); font-weight: 600; font-family: 'Cormorant Garamond', serif; letter-spacing: .04em; }
+  td { color: #d0c4ae; }
+
+  .todo { color: #d4756a; font-weight: 600; }
+
+  a { color: var(--gold-lt); }
+
+  footer { text-align: center; font-size: .75rem; color: var(--muted); opacity: .6; margin-top: 40px; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="ornament">
+    <svg viewBox="0 0 24 24"><path d="M12 2L9.5 9H2l6 4.5L5.5 21 12 16.5 18.5 21 16 13.5l6-4.5h-7.5z"/></svg>
+  </div>
+
+  <span class="eyebrow">(Ne)potrebný muž</span>
+  <h1>Právne <span class="gold">informácie</span></h1>
+  <p class="updated">Platné od 21. 7. 2026</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-panel="terms">Podmienky používania</button>
+    <button class="tab-btn" data-panel="privacy">Ochrana osobných údajov</button>
+    <button class="tab-btn" data-panel="disclaimer">Zrieknutie sa zodpovednosti</button>
+  </div>
+
+  <!-- ===================== PODMIENKY POUŽÍVANIA ===================== -->
+  <section id="terms" class="panel active">
+    <h2>1. Úvodné ustanovenia</h2>
+    <p>Tieto Podmienky používania (ďalej len „Podmienky“) upravujú vzťah medzi poskytovateľom webovej aplikácie Sprievodca (ďalej len „Služba“) a jej používateľom (ďalej len „Používateľ“).</p>
+    <p>Poskytovateľom Služby je obchodná spoločnosť <strong>Ngroup s. r. o.</strong>, so sídlom Dunajská 7614/8, Bratislava – mestská časť Staré Mesto, 811 08, IČO: 53 813 189 (ďalej len „Poskytovateľ“).</p>
+    <p>Používaním Služby Používateľ potvrdzuje, že si tieto Podmienky prečítal a súhlasí s nimi.</p>
+
+    <h2>2. Popis Služby</h2>
+    <p>Sprievodca je AI mentorský chat, ktorý na základe otázky Používateľa vygeneruje odpoveď postavenú na obsahu kníh nahraných Poskytovateľom (technológia tzv. RAG — vyhľadávanie relevantného kontextu a jeho spracovanie jazykovým modelom umelej inteligencie).</p>
+    <p>Ako infraštruktúrny partner pre generovanie odpovedí Služba využíva jazykový model spoločnosti <strong>Anthropic, PBC</strong>, so sídlom 548 Market Street, PMB 90375, San Francisco, CA 94104, USA.</p>
+    <p>Odpovede generuje umelá inteligencia automaticky a nie sú pred zobrazením kontrolované človekom — pozri časť „Zrieknutie sa zodpovednosti“.</p>
+
+    <h2>3. Registrácia a účet</h2>
+    <p>Na využívanie platenej verzie Služby je potrebná registrácia — e-mailom a heslom, alebo prihlásením cez účet Google.</p>
+    <p>Používateľ je povinný uvádzať pravdivé údaje a chrániť svoje prístupové údaje. Za akúkoľvek aktivitu vykonanú z jeho účtu zodpovedá Používateľ.</p>
+    <p>Služba je určená osobám starším ako 16 rokov. Ak je Používateľ mladší ako 18 rokov, na uzavretie platenej zmluvy (predplatné) sa vyžaduje súhlas zákonného zástupcu.</p>
+    <p>Poskytovateľ si vyhradzuje právo zrušiť alebo pozastaviť účet Používateľa, ktorý porušuje tieto Podmienky, zneužíva Službu alebo sa pokúša obísť jej platobný či bezpečnostný mechanizmus.</p>
+
+    <h2>4. Bezplatná skúšobná verzia a platené predplatné</h2>
+    <p>Používateľ bez aktívneho predplatného má nárok na obmedzený počet bezplatných otázok. Po ich vyčerpaní je ďalšie používanie Služby podmienené aktívnym plateným predplatným.</p>
+    <p>Predplatné sa hradí formou opakovanej mesačnej platby a automaticky sa obnovuje, pokiaľ ho Používateľ nezruší. Predplatné poskytuje mesačnú kvótu tzv. odpovedových tokenov (rozsah generovaných odpovedí); po jej vyčerpaní sa obnoví na začiatku ďalšieho fakturačného obdobia.</p>
+    <p>Platby v mene Poskytovateľa spracúva tretia strana — <strong>Stripe Payments Europe, Limited</strong>, so sídlom One Wilton Park, Wilton Place, Dublin 2, D02 FX04, Írsko (ďalej len „Stripe“). Poskytovateľ nemá prístup k číslu platobnej karty Používateľa ani ho neukladá.</p>
+    <p>Predplatné je možné kedykoľvek zrušiť alebo zmeniť priamo v Službe cez odkaz „Spravovať predplatné“ (Stripe Customer Portal). Zrušenie je účinné ku koncu už zaplateného fakturačného obdobia.</p>
+    <p>Používateľ berie na vedomie, že vzhľadom na charakter Služby (digitálny obsah poskytovaný okamžite po zaplatení) môže v súlade s § 7 ods. 6 zákona č. 102/2014 Z. z. o ochrane spotrebiteľa pri predaji na diaľku stratiť nárok na odstúpenie od zmluvy do 14 dní, ak výslovne súhlasil so začatím poskytovania Služby pred uplynutím tejto lehoty.</p>
+
+    <h2>5. Práva a povinnosti Používateľa</h2>
+    <ul>
+      <li>Nepoužívať Službu na nezákonné účely ani sa pokúšať o neoprávnený prístup k systému.</li>
+      <li>Nezdieľať svoj účet s tretími osobami.</li>
+      <li>Nekopírovať, nešíriť ani komerčne nevyužívať obsah kníh získaný prostredníctvom Služby.</li>
+    </ul>
+    <p>Obsah kníh nahraných do Služby, ako aj samotná Služba (softvér, dizajn), sú chránené autorským právom a inými právami duševného vlastníctva. Používaním Služby Používateľ nenadobúda žiadne vlastnícke ani licenčné práva k tomuto obsahu nad rámec bežného osobného, nekomerčného použitia.</p>
+
+    <h2>6. Zmeny Podmienok</h2>
+    <p>Poskytovateľ si vyhradzuje právo tieto Podmienky kedykoľvek zmeniť. O podstatných zmenách bude Používateľ informovaný pri najbližšom prihlásení. Pokračovaním v používaní Služby po zverejnení zmien Používateľ vyjadruje súhlas so zmeneným znením.</p>
+
+    <h2>7. Záverečné ustanovenia</h2>
+    <p>Tieto Podmienky sa spravujú právnym poriadkom Slovenskej republiky. Používatelia — spotrebitelia majú možnosť obrátiť sa na Slovenskú obchodnú inšpekciu alebo využiť platformu na riešenie sporov online (RSO) na <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
+  </section>
+
+  <!-- ===================== OCHRANA OSOBNÝCH ÚDAJOV ===================== -->
+  <section id="privacy" class="panel">
+    <h2>1. Prevádzkovateľ</h2>
+    <p>Prevádzkovateľom osobných údajov v zmysle nariadenia (EÚ) 2016/679 (GDPR) a zákona č. 18/2018 Z. z. o ochrane osobných údajov je <strong>Ngroup s. r. o.</strong>, Dunajská 7614/8, Bratislava – mestská časť Staré Mesto, 811 08, IČO: 53 813 189.</p>
+    <p>Kontakt vo veciach ochrany osobných údajov: <span class="todo">[DOPLŇ KONTAKTNÝ E-MAIL]</span></p>
+
+    <h2>2. Aké osobné údaje spracúvame</h2>
+    <ul>
+      <li><strong>Registračné údaje:</strong> e-mailová adresa, hash hesla (heslo v čitateľnej podobe sa nikde neukladá), prípadne meno a identifikátor účtu pri prihlásení cez Google.</li>
+      <li><strong>Údaje o predplatnom:</strong> identifikátor zákazníka v systéme Stripe, stav predplatného, spotreba tokenov v rámci predplateného balíka. Číslo platobnej karty nespracúvame ani neukladáme — to robí výhradne Stripe.</li>
+      <li><strong>Obsah komunikácie:</strong> otázky položené Sprievodcovi a vygenerované odpovede, aby appka vedela nadviazať na predchádzajúci rozhovor.</li>
+      <li><strong>Technické údaje:</strong> dočasný identifikátor relácie uložený v prehliadači (localStorage) pre neprihlásených návštevníkov a prihlasovacia cookie (JWT) pre prihlásených používateľov.</li>
+    </ul>
+
+    <h2>3. Účel a právny základ spracúvania</h2>
+    <ul>
+      <li>Poskytovanie Služby a vedenie konverzácie — plnenie zmluvy (čl. 6 ods. 1 písm. b) GDPR).</li>
+      <li>Autentifikácia a zabezpečenie účtu — plnenie zmluvy a oprávnený záujem (čl. 6 ods. 1 písm. b), f)).</li>
+      <li>Fakturácia a spracovanie platieb — plnenie zmluvy a zákonná povinnosť vedenia účtovníctva (čl. 6 ods. 1 písm. b), c)).</li>
+      <li>Zlepšovanie kvality odpovedí Služby — oprávnený záujem Prevádzkovateľa (čl. 6 ods. 1 písm. f)).</li>
+    </ul>
+
+    <h2>4. Komu údaje poskytujeme</h2>
+    <p>Na prevádzku Služby využívame nasledovných partnerov, ktorí pre nás v pozícii sprostredkovateľa spracúvajú časť údajov:</p>
+    <table>
+      <tr><th>Partner</th><th>Účel</th><th>Sídlo</th></tr>
+      <tr><td>Anthropic, PBC</td><td>Infraštruktúra pre generovanie odpovedí AI (do modelu sa posiela znenie otázky a relevantný kontext z kníh)</td><td>San Francisco, CA, USA</td></tr>
+      <tr><td>Voyage AI</td><td>Vytváranie číselnej reprezentácie textu (embeddings) pre vyhľadávanie relevantného obsahu kníh</td><td>USA</td></tr>
+      <tr><td>Supabase</td><td>Databázová infraštruktúra (účty, konverzácie, predplatné)</td><td>USA</td></tr>
+      <tr><td>Stripe Payments Europe, Limited</td><td>Spracovanie platieb za predplatné</td><td>Dublin, Írsko</td></tr>
+      <tr><td>Google LLC</td><td>Prihlásenie cez Google účet (OAuth)</td><td>USA</td></tr>
+      <tr><td>Hosting Služby</td><td>Prevádzka servera, na ktorom Služba beží</td><td>EÚ</td></tr>
+    </table>
+    <p>Pri prenose údajov k partnerom so sídlom mimo Európskeho hospodárskeho priestoru (napr. Anthropic, Voyage AI, Google) sa zabezpečujú primerané záruky ochrany údajov, najmä štandardné zmluvné doložky Európskej komisie a/alebo certifikácia v rámci EU-U.S. Data Privacy Framework, pokiaľ sa na daného partnera vzťahuje.</p>
+    <p>Vaše údaje nepredávame ani neposkytujeme na marketingové účely tretím stranám.</p>
+
+    <h2>5. Doba uchovávania</h2>
+    <p>Údaje o účte a histórii konverzácie uchovávame po dobu trvania účtu. Po zrušení účtu údaje vymažeme alebo anonymizujeme, s výnimkou údajov, ktoré sme zo zákona povinní uchovávať dlhšie (napr. účtovné doklady o platbách).</p>
+
+    <h2>6. Vaše práva</h2>
+    <p>Ako dotknutá osoba máte právo najmä na prístup k svojim osobným údajom, ich opravu, výmaz („právo na zabudnutie“), obmedzenie spracúvania, prenosnosť údajov a namietanie proti spracúvaniu založenom na oprávnenom záujme.</p>
+    <p>Ak sa domnievate, že Vaše údaje spracúvame v rozpore s GDPR, máte právo podať sťažnosť na <a href="https://dataprotection.gov.sk" target="_blank" rel="noopener">Úrad na ochranu osobných údajov SR</a>.</p>
+    <p>Svoje práva si môžete uplatniť na kontaktnom e-maile uvedenom v bode 1.</p>
+
+    <h2>7. Cookies a lokálne úložisko</h2>
+    <ul>
+      <li>Prihlasovacia cookie (httpOnly, nedostupná pre JavaScript) slúži výhradne na udržanie prihlásenia.</li>
+      <li>Do localStorage prehliadača ukladáme náhodné identifikačné číslo relácie (samo osebe nie je osobným údajom) pre neprihlásených návštevníkov, aby appka vedela nadviazať na predchádzajúce otázky v rámci bezplatnej skúšky.</li>
+      <li>Nepoužívame marketingové ani analytické cookies tretích strán.</li>
+    </ul>
+
+    <h2>8. Zabezpečenie</h2>
+    <p>Heslá sa ukladajú výhradne v hashovanej podobe, komunikácia prebieha cez šifrované HTTPS spojenie a administrácia Služby je chránená samostatným prístupovým heslom.</p>
+  </section>
+
+  <!-- ===================== ZRIEKNUTIE SA ZODPOVEDNOSTI ===================== -->
+  <section id="disclaimer" class="panel">
+    <h2>1. Sprievodca je AI nástroj, nie odborný poradca</h2>
+    <p>Odpovede generuje jazykový model spoločnosti Anthropic na základe obsahu kníh Juraja Augustína Kureka a nie sú pred zobrazením kontrolované človekom.</p>
+    <p>Služba neposkytuje psychologické, terapeutické, lekárske, právne ani finančné poradenstvo. Odpovede Sprievodcu v žiadnom prípade nenahrádzajú konzultáciu s kvalifikovaným odborníkom (psychológ, psychiater, terapeut, lekár, právnik).</p>
+    <p>Umelá inteligencia môže robiť chyby, nesprávne interpretovať kontext alebo poskytnúť neúplnú či nepresnú odpoveď. Poskytovateľ negarantuje správnosť, úplnosť ani aktuálnosť odpovedí.</p>
+
+    <div class="callout">
+      <strong>Krízová situácia?</strong> Ak prežívate myšlienky na sebapoškodenie, samovraždu, alebo sa nachádzate v akútnej kríze, Sprievodca nie je určený a nie je spôsobilý Vám pomôcť. Obráťte sa prosím okamžite na odbornú pomoc — Linka dôvery Nezábudka <strong>0800 800 566</strong> (nonstop, bezplatne) alebo záchranná zdravotná služba <strong>155 / 112</strong>.
+    </div>
+
+    <h2>2. Obmedzenie zodpovednosti</h2>
+    <p>Používaním odpovedí Sprievodcu a konaním na ich základe koná Používateľ na vlastnú zodpovednosť.</p>
+    <p>Poskytovateľ (Ngroup s. r. o.) nezodpovedá za akúkoľvek škodu, ušlý zisk ani inú ujmu, ktorá by Používateľovi alebo tretej osobe vznikla v dôsledku spoliehania sa na obsah vygenerovaný Službou, v maximálnom rozsahu prípustnom podľa platného práva.</p>
+    <p>Spoločnosť <strong>Anthropic, PBC</strong> je infraštruktúrnym poskytovateľom technológie umelej inteligencie použitej v Službe a nie je zmluvnou stranou vo vzťahu medzi Používateľom a Poskytovateľom, ani prevádzkovateľom tejto webovej aplikácie.</p>
+    <p>Rovnako spoločnosť <strong>Stripe Payments Europe, Limited</strong> vystupuje výhradne ako spracovateľ platieb a nenesie zodpovednosť za obsah ani fungovanie samotnej Služby.</p>
+  </section>
+
+  <footer>© 2026 Juraj Augustín Kurek · Ngroup s.r.o. · <a href="/">Späť do appky</a></footer>
+</main>
+
+<script>
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.panel');
+
+  function activatePanel(id) {
+    tabButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.panel === id));
+    panels.forEach((panel) => panel.classList.toggle('active', panel.id === id));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activatePanel(btn.dataset.panel);
+      history.replaceState(null, '', `#${btn.dataset.panel}`);
+    });
+  });
+
+  const initial = location.hash.replace('#', '');
+  if (initial && document.getElementById(initial)) activatePanel(initial);
+</script>
+</body>
+</html>

@@ -1,11 +1,13 @@
 const express = require('express');
 const multer = require('multer');
+const crypto = require('crypto');
 const pdfParse = require('pdf-parse');
 const mammoth = require('mammoth');
 
 const supabase = require('../lib/supabase');
 const { chunkText } = require('../lib/chunk');
 const { embed } = require('../lib/voyage');
+const { tierById } = require('../lib/pricing');
 const adminAuth = require('../middleware/adminAuth');
 
 const router = express.Router();
@@ -88,6 +90,75 @@ router.get('/documents', async (req, res) => {
 // DELETE /api/admin/documents/:id — odstránenie dokumentu (aj s jeho chunkami cez cascade)
 router.delete('/documents/:id', async (req, res) => {
   const { error } = await supabase.from('documents').delete().eq('id', req.params.id);
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ ok: true });
+});
+
+// Vygeneruje čitateľný kód bez zameniteľných znakov (0/O, 1/I), napr. "K7F2-9XQP".
+function generateCode() {
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const raw = Array.from(crypto.randomBytes(8))
+    .map((b) => alphabet[b % alphabet.length])
+    .join('');
+  return `${raw.slice(0, 4)}-${raw.slice(4, 8)}`;
+}
+
+// POST /api/admin/codes — vytvorenie zľavového/darčekového kódu
+// { code?, plan, durationDays, maxRedemptions?, note?, expiresAt? }
+router.post('/codes', async (req, res) => {
+  try {
+    const { plan, note } = req.body;
+    const tier = tierById(plan);
+    if (!tier) return res.status(400).json({ error: 'Neznámy plán.' });
+
+    const durationDays = Number(req.body.durationDays);
+    if (!Number.isInteger(durationDays) || durationDays <= 0) {
+      return res.status(400).json({ error: 'Trvanie musí byť kladné celé číslo dní.' });
+    }
+
+    const maxRedemptions = Number(req.body.maxRedemptions);
+    let code = String(req.body.code || '').trim().toUpperCase();
+    if (!code) code = generateCode();
+
+    const { data, error } = await supabase
+      .from('redemption_codes')
+      .insert({
+        code,
+        plan,
+        duration_days: durationDays,
+        max_redemptions: Number.isInteger(maxRedemptions) && maxRedemptions > 0 ? maxRedemptions : 1,
+        note: note || null,
+        expires_at: req.body.expiresAt || null
+      })
+      .select()
+      .single();
+
+    if (error) {
+      if (error.code === '23505') return res.status(409).json({ error: 'Tento kód už existuje.' });
+      throw error;
+    }
+
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/admin/codes — zoznam kódov
+router.get('/codes', async (req, res) => {
+  const { data, error } = await supabase
+    .from('redemption_codes')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
+});
+
+// DELETE /api/admin/codes/:id — zrušenie kódu (už priradené členstvá zostávajú platné)
+router.delete('/codes/:id', async (req, res) => {
+  const { error } = await supabase.from('redemption_codes').delete().eq('id', req.params.id);
   if (error) return res.status(500).json({ error: error.message });
   res.json({ ok: true });
 });

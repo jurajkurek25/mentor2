@@ -23,6 +23,16 @@
   .msg.user { align-self: flex-end; background: rgba(184,146,58,.12); border: 1px solid var(--rule); color: var(--paper); }
   .msg.assistant { align-self: flex-start; background: rgba(255,255,255,.03); border-left: 2px solid var(--gold); color: #d0c4ae; }
   .msg.assistant strong { color: var(--paper); }
+  .msg.assistant em { font-style: italic; color: var(--paper); }
+  .msg.assistant p { margin: 0 0 10px; }
+  .msg.assistant p:last-child { margin-bottom: 0; }
+  .msg.assistant ul, .msg.assistant ol { margin: 0 0 10px 1.3em; }
+  .msg.assistant ul:last-child, .msg.assistant ol:last-child { margin-bottom: 0; }
+  .msg.assistant li { margin-bottom: 4px; }
+  .msg.assistant .msg-heading { font-family: 'Cormorant Garamond', serif; font-weight: 600; color: var(--gold-lt); margin: 4px 0 8px; }
+  .msg.assistant .msg-heading-1 { font-size: 1.3rem; }
+  .msg.assistant .msg-heading-2 { font-size: 1.15rem; }
+  .msg.assistant .msg-heading-3 { font-size: 1.05rem; letter-spacing: .02em; }
   .msg.pending { color: var(--muted); font-style: italic; }
 
   .empty-state { text-align: center; color: var(--muted); font-style: italic; font-size: 1.05rem; margin: 40px 0; line-height: 1.8; }
@@ -32,14 +42,44 @@
   .input-row button { white-space: nowrap; }
 
   footer { text-align: center; font-size: .75rem; color: var(--muted); opacity: .6; margin-top: 20px; }
+
+  .account-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: .82rem; color: var(--muted); padding: 10px 0; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+  .account-bar a, .account-bar button.link-btn { color: var(--gold); text-decoration: none; background: none; border: none; font-family: inherit; font-size: inherit; cursor: pointer; padding: 0; }
+  .account-bar a:hover, .account-bar button.link-btn:hover { color: var(--gold-lt); }
+
+  .paywall { display: none; background: rgba(184,146,58,.08); border: 1px solid var(--rule); padding: 20px; margin: 16px 0; text-align: center; }
+  .paywall p { margin-bottom: 14px; line-height: 1.6; }
+  .plans { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+  .plan-card { flex: 1; min-width: 150px; border: 1px solid var(--rule); padding: 16px; }
+  .plan-card h3 { font-family: 'Cormorant Garamond', serif; font-weight: 400; color: var(--gold-lt); margin-bottom: 6px; }
+  .plan-card .price { font-size: 1.3rem; margin-bottom: 4px; }
+  .plan-card .tokens { font-size: .78rem; color: var(--muted); margin-bottom: 12px; }
+
+  .redeem-row { display: flex; gap: 8px; justify-content: center; align-items: flex-start; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--rule); flex-wrap: wrap; }
+  .redeem-row input { max-width: 220px; text-align: center; text-transform: uppercase; }
+  .redeem-note { font-size: .8rem; color: var(--muted); margin-top: 8px; min-height: 1.2em; }
+  .redeem-note.error { color: #d4756a; }
+  .redeem-note.success { color: var(--gold-lt); }
 </style>
 </head>
 <body>
 <main class="page">
+  <div class="account-bar" id="accountBar"></div>
+
   <div class="hero">
     <span class="eyebrow">(Ne)potrebný muž</span>
     <h1>Spýtaj sa <span class="gold">Sprievodcu</span></h1>
     <p class="hero-sub">Odpovede postavené na knihách o mužstve</p>
+  </div>
+
+  <div class="paywall" id="paywall">
+    <p id="paywallMessage"></p>
+    <div class="plans" id="plans"></div>
+    <div class="redeem-row">
+      <input type="text" id="redeemCodeInput" placeholder="Zľavový kód">
+      <button class="cta-btn" id="redeemCodeBtn">Uplatniť kód</button>
+    </div>
+    <p class="redeem-note" id="redeemStatus"></p>
   </div>
 
   <div class="ornament">
@@ -55,9 +95,10 @@
     <button id="sendBtn" class="cta-btn">Odoslať</button>
   </div>
 
-  <footer>© 2026 Juraj Augustín Kurek · Ngroup s.r.o.</footer>
+  <footer>© 2026 Juraj Augustín Kurek · Ngroup s.r.o. · <a href="/pravidla.html" style="color: var(--muted);">Podmienky používania a ochrana súkromia</a></footer>
 </main>
 
+<script src="/js/account.js"></script>
 <script src="/js/chat.js"></script>
 </body>
 </html>

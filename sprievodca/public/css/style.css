@@ -68,7 +68,7 @@ h1 .gold { color: var(--gold-lt); font-style: normal; }
 .cta-btn:hover { background: var(--gold-lt); }
 .cta-btn:disabled { opacity: .5; cursor: not-allowed; }
 
-input, textarea {
+input, textarea, select {
   font-family: 'EB Garamond', serif;
   background: rgba(255,255,255,.04);
   border: 1px solid var(--rule);
@@ -77,4 +77,5 @@ input, textarea {
   font-size: 1rem;
 }
 input::placeholder, textarea::placeholder { color: var(--muted); }
-input:focus, textarea:focus { outline: none; border-color: var(--gold); }
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--gold); }
+select option { background: var(--ink); color: var(--paper); }

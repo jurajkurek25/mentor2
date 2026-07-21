@@ -11,16 +11,19 @@
   .box h2 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.3rem; margin-bottom: 16px; }
   .field { margin-bottom: 14px; }
   .field label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: 6px; }
-  .field input[type=text] { width: 100%; }
+  .field input[type=text], .field input[type=number], .field input[type=date], .field select { width: 100%; }
   .field input[type=file] { width: 100%; color: var(--paper); }
+  .field-row { display: flex; gap: 10px; }
+  .field-row .field { flex: 1; }
 
   .doc-list { list-style: none; }
-  .doc-list li { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(184,146,58,.12); }
+  .doc-list li { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(184,146,58,.12); gap: 10px; }
   .doc-list li:last-child { border-bottom: none; }
   .doc-title { font-size: 1.05rem; }
   .doc-meta { font-size: .8rem; color: var(--muted); }
-  .del-btn { background: none; border: 1px solid var(--rule); color: var(--muted); padding: 6px 12px; font-size: .8rem; cursor: pointer; }
+  .del-btn { background: none; border: 1px solid var(--rule); color: var(--muted); padding: 6px 12px; font-size: .8rem; cursor: pointer; white-space: nowrap; }
   .del-btn:hover { color: var(--gold); border-color: var(--gold); }
+  .code-value { font-family: monospace; font-size: 1.05rem; letter-spacing: .05em; color: var(--gold-lt); }
 
   .status { font-size: .9rem; margin-top: 10px; color: var(--muted); font-style: italic; }
   .status.error { color: #d4756a; }
@@ -62,6 +65,52 @@
     <div class="box">
       <h2>Nahrané dokumenty</h2>
       <ul class="doc-list" id="docList"></ul>
+    </div>
+
+    <div class="box">
+      <h2>Vytvoriť zľavový / darčekový kód</h2>
+      <div class="field">
+        <label>Kód (voliteľné — necháš prázdne, appka ho vygeneruje)</label>
+        <input type="text" id="codeInput" placeholder="napr. VIANOCE2026">
+      </div>
+      <div class="field">
+        <label>Plán, ktorý kód sprístupní</label>
+        <select id="codePlanInput"></select>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Trvanie členstva</label>
+          <input type="number" id="codeDurationInput" min="1" value="30">
+        </div>
+        <div class="field">
+          <label>Jednotka</label>
+          <select id="codeDurationUnitInput">
+            <option value="days">dni</option>
+            <option value="months">mesiace</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Max. počet uplatnení</label>
+          <input type="number" id="codeMaxUsesInput" min="1" value="1">
+        </div>
+        <div class="field">
+          <label>Kód platí do (voliteľné)</label>
+          <input type="date" id="codeExpiresInput">
+        </div>
+      </div>
+      <div class="field">
+        <label>Poznámka (voliteľné, len pre teba)</label>
+        <input type="text" id="codeNoteInput" placeholder="napr. YouTube giveaway 10/2026">
+      </div>
+      <button id="createCodeBtn" class="cta-btn">Vytvoriť kód</button>
+      <p id="codeStatus" class="status"></p>
+    </div>
+
+    <div class="box">
+      <h2>Existujúce kódy</h2>
+      <ul class="doc-list" id="codeList"></ul>
     </div>
   </div>
 </main>
