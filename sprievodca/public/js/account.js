@@ -2,6 +2,9 @@ const accountBar = document.getElementById('accountBar');
 const paywall = document.getElementById('paywall');
 const paywallMessage = document.getElementById('paywallMessage');
 const plansEl = document.getElementById('plans');
+const redeemCodeInput = document.getElementById('redeemCodeInput');
+const redeemCodeBtn = document.getElementById('redeemCodeBtn');
+const redeemStatus = document.getElementById('redeemStatus');
 
 let currentUser = null;
 
@@ -27,10 +30,15 @@ async function loadAccount() {
   accountBar.innerHTML = `
     <span>${currentUser.email} · ${quotaText}</span>
     <span>
+      <button class="link-btn" id="redeemLinkBtn">Mám kód</button> ·
       <button class="link-btn" id="manageBtn">Spravovať predplatné</button> ·
       <button class="link-btn" id="logoutBtn">Odhlásiť sa</button>
     </span>
   `;
+
+  document.getElementById('redeemLinkBtn').addEventListener('click', () => {
+    showPaywall({ error: 'Zadaj svoj zľavový alebo darčekový kód nižšie.', needsSubscription: true });
+  });
 
   document.getElementById('manageBtn').addEventListener('click', async () => {
     const res = await fetch('/api/billing/portal', { method: 'POST' });
@@ -86,5 +94,49 @@ async function showPaywall({ error, needsSubscription }) {
     });
   });
 }
+
+redeemCodeBtn.addEventListener('click', async () => {
+  const code = redeemCodeInput.value.trim();
+  if (!code) {
+    redeemStatus.textContent = 'Zadaj kód.';
+    redeemStatus.className = 'redeem-note error';
+    return;
+  }
+  if (!currentUser) {
+    location.href = '/login.html';
+    return;
+  }
+
+  redeemCodeBtn.disabled = true;
+  redeemStatus.textContent = '';
+  redeemStatus.className = 'redeem-note';
+
+  try {
+    const res = await fetch('/api/redeem', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Kód sa nepodarilo uplatniť.');
+
+    redeemStatus.textContent = `Hotovo — členstvo (${data.plan}) je aktívne.`;
+    redeemStatus.className = 'redeem-note success';
+    redeemCodeInput.value = '';
+    loadAccount();
+    setTimeout(() => {
+      paywall.style.display = 'none';
+    }, 2000);
+  } catch (err) {
+    redeemStatus.textContent = err.message;
+    redeemStatus.className = 'redeem-note error';
+  } finally {
+    redeemCodeBtn.disabled = false;
+  }
+});
+
+redeemCodeInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') redeemCodeBtn.click();
+});
 
 loadAccount();

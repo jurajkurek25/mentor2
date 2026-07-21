@@ -111,6 +111,10 @@ async function upsertSubscriptionFromStripe(stripeSubscription, userId) {
     status: stripeSubscription.status,
     current_period_start: start,
     current_period_end: end,
+    // Explicitne prepíše prípadné predchádzajúce priradenie cez zľavový kód (source: 'code') —
+    // skutočné platené predplatné má vždy prednosť.
+    source: 'stripe',
+    redemption_code_id: null,
     updated_at: new Date().toISOString()
   };
 

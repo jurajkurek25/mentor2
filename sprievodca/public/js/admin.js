@@ -12,8 +12,25 @@ const uploadBtn = document.getElementById('uploadBtn');
 const uploadStatus = document.getElementById('uploadStatus');
 const docList = document.getElementById('docList');
 
+const codeInput = document.getElementById('codeInput');
+const codePlanInput = document.getElementById('codePlanInput');
+const codeDurationInput = document.getElementById('codeDurationInput');
+const codeDurationUnitInput = document.getElementById('codeDurationUnitInput');
+const codeMaxUsesInput = document.getElementById('codeMaxUsesInput');
+const codeExpiresInput = document.getElementById('codeExpiresInput');
+const codeNoteInput = document.getElementById('codeNoteInput');
+const createCodeBtn = document.getElementById('createCodeBtn');
+const codeStatus = document.getElementById('codeStatus');
+const codeList = document.getElementById('codeList');
+
 function authHeaders() {
   return { 'X-Admin-Password': adminPassword };
+}
+
+async function loadTiersIntoSelect() {
+  const res = await fetch('/api/billing/tiers');
+  const tiers = await res.json();
+  codePlanInput.innerHTML = tiers.map((t) => `<option value="${t.id}">${t.label}</option>`).join('');
 }
 
 async function tryEnterPanel() {
@@ -23,6 +40,8 @@ async function tryEnterPanel() {
     adminPanel.style.display = 'block';
     sessionStorage.setItem('sprievodca_admin_pw', adminPassword);
     loadDocuments();
+    loadTiersIntoSelect();
+    loadCodes();
     return true;
   }
   return false;
@@ -102,6 +121,82 @@ uploadBtn.addEventListener('click', async () => {
     uploadStatus.className = 'status error';
   } finally {
     uploadBtn.disabled = false;
+  }
+});
+
+async function loadCodes() {
+  const res = await fetch('/api/admin/codes', { headers: authHeaders() });
+  const codes = await res.json();
+
+  codeList.innerHTML = '';
+  if (!codes.length) {
+    codeList.innerHTML = '<li class="doc-meta">Zatiaľ žiadne kódy.</li>';
+    return;
+  }
+
+  for (const c of codes) {
+    const li = document.createElement('li');
+    const expires = c.expires_at ? `, platí do ${new Date(c.expires_at).toLocaleDateString('sk-SK')}` : '';
+    const note = c.note ? ` · ${c.note}` : '';
+    li.innerHTML = `
+      <div>
+        <div class="code-value">${c.code}</div>
+        <div class="doc-meta">${c.plan} · ${c.duration_days} dní · použité ${c.redemption_count}/${c.max_redemptions}${expires}${note}</div>
+      </div>
+      <button class="del-btn" data-id="${c.id}">Zrušiť</button>
+    `;
+    codeList.appendChild(li);
+  }
+
+  codeList.querySelectorAll('.del-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Zrušiť tento kód? Už priradené členstvá zostanú platné, len sa kód nebude dať ďalej uplatniť.')) return;
+      await fetch(`/api/admin/codes/${btn.dataset.id}`, { method: 'DELETE', headers: authHeaders() });
+      loadCodes();
+    });
+  });
+}
+
+createCodeBtn.addEventListener('click', async () => {
+  const durationValue = Number(codeDurationInput.value);
+  if (!durationValue || durationValue <= 0) {
+    codeStatus.textContent = 'Zadaj kladné trvanie.';
+    codeStatus.className = 'status error';
+    return;
+  }
+  const durationDays = codeDurationUnitInput.value === 'months' ? durationValue * 30 : durationValue;
+
+  createCodeBtn.disabled = true;
+  codeStatus.textContent = '';
+  codeStatus.className = 'status';
+
+  try {
+    const res = await fetch('/api/admin/codes', {
+      method: 'POST',
+      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        code: codeInput.value.trim(),
+        plan: codePlanInput.value,
+        durationDays,
+        maxRedemptions: Number(codeMaxUsesInput.value) || 1,
+        note: codeNoteInput.value.trim(),
+        expiresAt: codeExpiresInput.value || null
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Neznáma chyba');
+
+    codeStatus.textContent = `Hotovo — kód ${data.code} je pripravený na uplatnenie.`;
+    codeStatus.className = 'status success';
+    codeInput.value = '';
+    codeNoteInput.value = '';
+    codeExpiresInput.value = '';
+    loadCodes();
+  } catch (err) {
+    codeStatus.textContent = `Chyba: ${err.message}`;
+    codeStatus.className = 'status error';
+  } finally {
+    createCodeBtn.disabled = false;
   }
 });
 

@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const chatRoutes = require('./routes/chat');
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
+const redeemRoutes = require('./routes/redeem');
 const { router: billingRoutes, handleWebhook } = require('./routes/billing');
 const { attachUser } = require('./middleware/requireAuth');
 
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/billing', billingRoutes);
+app.use('/api/redeem', redeemRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/admin', adminRoutes);
 

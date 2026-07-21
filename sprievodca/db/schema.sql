@@ -76,11 +76,13 @@ create index if not exists messages_conversation_idx on messages(conversation_id
 create index if not exists conversations_session_idx on conversations(session_id);
 create index if not exists conversations_user_idx on conversations(user_id);
 
--- Stripe predplatné — jedno aktívne predplatné na používateľa, kvóta odpovedových (output) tokenov na obdobie
+-- Predplatné — jedno aktívne predplatné na používateľa, kvóta odpovedových (output) tokenov na obdobie.
+-- source rozlišuje, či ide o Stripe predplatné, alebo o prístup priradený zľavovým/darčekovým kódom
+-- (v tom prípade stripe_* stĺpce zostávajú prázdne).
 create table if not exists subscriptions (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references users(id) on delete cascade not null unique,
-  stripe_customer_id text not null,
+  stripe_customer_id text,
   stripe_subscription_id text unique,
   stripe_price_id text,
   plan text,
@@ -89,10 +91,51 @@ create table if not exists subscriptions (
   tokens_used int not null default 0,
   current_period_start timestamptz,
   current_period_end timestamptz,
+  source text not null default 'stripe', -- 'stripe' | 'code'
+  redemption_code_id uuid,
   updated_at timestamptz default now()
 );
 
+-- Pre appky nasadené pred touto zmenou: uvoľní NOT NULL a dorobí nové stĺpce (bezpečné spustiť opakovane).
+alter table subscriptions alter column stripe_customer_id drop not null;
+alter table subscriptions add column if not exists source text not null default 'stripe';
+alter table subscriptions add column if not exists redemption_code_id uuid;
+
 create index if not exists subscriptions_customer_idx on subscriptions(stripe_customer_id);
+
+-- Zľavové / darčekové kódy — vytvára a spravuje admin cez /admin, uplatňuje ich prihlásený používateľ.
+create table if not exists redemption_codes (
+  id uuid primary key default gen_random_uuid(),
+  code text unique not null,
+  plan text not null,               -- 'zaklad' | 'premium' — musí zodpovedať tieru v lib/pricing.js
+  duration_days int not null,       -- na koľko dní kód priradí členstvo po uplatnení
+  max_redemptions int not null default 1,
+  redemption_count int not null default 0,
+  note text,                        -- interná poznámka pre admina (napr. "YouTube giveaway 10/2026")
+  active boolean not null default true,
+  expires_at timestamptz,           -- dokedy sa dá kód uplatniť (null = bez expirácie)
+  created_at timestamptz default now()
+);
+
+-- Audit — kto ktorý kód uplatnil, a zábrana opakovaného uplatnenia toho istého kódu tým istým používateľom.
+create table if not exists redemption_code_uses (
+  id uuid primary key default gen_random_uuid(),
+  code_id uuid references redemption_codes(id) on delete cascade not null,
+  user_id uuid references users(id) on delete cascade not null,
+  redeemed_at timestamptz default now(),
+  unique (code_id, user_id)
+);
+
+create index if not exists redemption_code_uses_user_idx on redemption_code_uses(user_id);
+
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'subscriptions_redemption_code_fkey') then
+    alter table subscriptions
+      add constraint subscriptions_redemption_code_fkey
+      foreign key (redemption_code_id) references redemption_codes(id) on delete set null;
+  end if;
+end $$;
 
 -- Atomické pripočítanie spotrebovaných odpovedových tokenov (bez race condition pri read-modify-write)
 create or replace function increment_tokens_used (p_user_id uuid, p_amount int)

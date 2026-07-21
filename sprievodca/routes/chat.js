@@ -46,6 +46,11 @@ async function checkSubscriptionQuota(userId) {
   if (!sub || !ACTIVE_STATUSES.includes(sub.status)) {
     return { allowed: false, reason: 'no_subscription' };
   }
+  // Stripe drží status aktuálny cez webhooky, ale kódom priradené predplatné (source: 'code') nemá
+  // žiadny webhook, ktorý by ho po vypršaní prepol na 'canceled' — treba teda vždy overiť dátum.
+  if (sub.current_period_end && new Date(sub.current_period_end) < new Date()) {
+    return { allowed: false, reason: 'no_subscription' };
+  }
   if (sub.tokens_used >= sub.tokens_included) {
     return { allowed: false, reason: 'quota_exceeded', periodEnd: sub.current_period_end };
   }

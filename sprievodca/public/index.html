@@ -54,6 +54,12 @@
   .plan-card h3 { font-family: 'Cormorant Garamond', serif; font-weight: 400; color: var(--gold-lt); margin-bottom: 6px; }
   .plan-card .price { font-size: 1.3rem; margin-bottom: 4px; }
   .plan-card .tokens { font-size: .78rem; color: var(--muted); margin-bottom: 12px; }
+
+  .redeem-row { display: flex; gap: 8px; justify-content: center; align-items: flex-start; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--rule); flex-wrap: wrap; }
+  .redeem-row input { max-width: 220px; text-align: center; text-transform: uppercase; }
+  .redeem-note { font-size: .8rem; color: var(--muted); margin-top: 8px; min-height: 1.2em; }
+  .redeem-note.error { color: #d4756a; }
+  .redeem-note.success { color: var(--gold-lt); }
 </style>
 </head>
 <body>
@@ -69,6 +75,11 @@
   <div class="paywall" id="paywall">
     <p id="paywallMessage"></p>
     <div class="plans" id="plans"></div>
+    <div class="redeem-row">
+      <input type="text" id="redeemCodeInput" placeholder="Zľavový kód">
+      <button class="cta-btn" id="redeemCodeBtn">Uplatniť kód</button>
+    </div>
+    <p class="redeem-note" id="redeemStatus"></p>
   </div>
 
   <div class="ornament">
